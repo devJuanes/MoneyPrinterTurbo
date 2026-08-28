@@ -1443,6 +1443,10 @@ with right_panel:
 
         with col1:
             st.subheader(tr("Pexels API Keys"))
+            # Incomplete/empty config.toml may omit these keys; default to [].
+            if "pexels_api_keys" not in config.app or config.app["pexels_api_keys"] is None:
+                config.app["pexels_api_keys"] = []
+
             if config.app["pexels_api_keys"]:
                 st.write(tr("Current Keys:"))
                 for key in config.app["pexels_api_keys"]:
@@ -1472,6 +1476,8 @@ with right_panel:
 
         with col2:
             st.subheader(tr("Pixabay API Keys"))
+            if "pixabay_api_keys" not in config.app or config.app["pixabay_api_keys"] is None:
+                config.app["pixabay_api_keys"] = []
 
             if config.app["pixabay_api_keys"]:
                 st.write(tr("Current Keys:"))
@@ -1503,9 +1509,7 @@ with right_panel:
         with col3:
             st.subheader(tr("Coverr API Keys"))
 
-            # 与 pexels/pixabay 不同,coverr_api_keys 是 PR 新增配置项,
-            # 老用户的 config.toml 不一定包含,这里先兜底初始化为空列表,
-            # 防止下面 .append / 索引访问触发 KeyError。
+            # Incomplete/empty config.toml may omit these keys; default to [].
             if "coverr_api_keys" not in config.app or config.app["coverr_api_keys"] is None:
                 config.app["coverr_api_keys"] = []
 

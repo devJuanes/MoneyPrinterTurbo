@@ -129,11 +129,16 @@ def load_config():
     if os.path.isdir(config_file):
         shutil.rmtree(config_file)
 
-    if not os.path.isfile(config_file):
-        example_file = f"{root_dir}/config.example.toml"
-        if os.path.isfile(example_file):
-            shutil.copyfile(example_file, config_file)
-            logger.info("copy config.example.toml to config.toml")
+    example_file = f"{root_dir}/config.example.toml"
+    # Treat a missing *or* empty config.toml the same: seed from the example.
+    # An empty file used to load as {}, which then KeyError'd on keys like
+    # pexels_api_keys in the WebUI.
+    needs_seed = (not os.path.isfile(config_file)) or (
+        os.path.isfile(config_file) and os.path.getsize(config_file) == 0
+    )
+    if needs_seed and os.path.isfile(example_file):
+        shutil.copyfile(example_file, config_file)
+        logger.info("copy config.example.toml to config.toml")
 
     logger.info(f"load config from file: {config_file}")
 

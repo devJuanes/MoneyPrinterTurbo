@@ -1,7 +1,17 @@
+import sys
 import uvicorn
 from loguru import logger
 
 from app.config import config
+
+# Windows consoles often use cp1252; force UTF-8 so loguru can print
+# non-ASCII characters without UnicodeEncodeError.
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 if __name__ == "__main__":
     logger.info(
